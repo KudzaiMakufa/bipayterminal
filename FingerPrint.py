@@ -136,6 +136,7 @@ class FingerPrint():
               r=requests.post('http://127.0.0.1:8000/api/pay', auth=(posid, location ), data=payload)
               print(" username pass "+posid+" "+location)
 
+              print(r.json())
               if r.json()['detail'] == "nofunds" :
                 msg = QtWidgets.QMessageBox()
                 msg.setIcon(QtWidgets.QMessageBox.Warning)
@@ -143,48 +144,28 @@ class FingerPrint():
                 msg.setInformativeText("Insufficient balance")
                 msg.setWindowTitle("")
                 msg.exec_()
+              elif r.json()['detail'] == "Invalid username/password." :
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Warning)
+                msg.setText("Error")
+                msg.setInformativeText("Invalid username/password.")
+                msg.setWindowTitle("")
+                msg.exec_()
 
-
-              else:
+              elif r.json()['detail'] == "success"  :
 
                 msg = QtWidgets.QMessageBox()
                 msg.setIcon(QtWidgets.QMessageBox.Information)
                 msg.setText("Success")
-                msg.setInformativeText("Payment successful \n balance = "+r.json()['amount'])
+                msg.setInformativeText("Payment successful \n balance = ")
                 msg.setWindowTitle("")
                 msg.exec_()
-                # result = r.json()['amount']
+                # result = r.json()
               
 
-              print(result)
+              # print(result)
           	  
-              # payload = {'location': location ,'card_no':posid,'amount':amount}
-              # r = requests.get("https://www.pksystems.co.zw/tanakaUz/public/api/transact/"+location+"/"+amount+"/"+posid+"/"+"match")
             
-              # print(r.content)
-              # if(result["status"] == "success"):
-              #   msg = QtWidgets.QMessageBox()
-              #   msg.setIcon(QtWidgets.QMessageBox.Information)
-              #   msg.setText("Fingerprint Matched")
-              #   msg.setInformativeText('Transaction Authenticated')
-              #   msg.setWindowTitle("")
-              #   msg.exec_()
-              #   print ("success = "+result["status"])
-              # elif (result["status"] == "blockedloc"):
-              #   msg = QtWidgets.QMessageBox()
-              #   msg.setIcon(QtWidgets.QMessageBox.Information)
-              #   msg.setText("Location differs ,fingerprint matched")
-              #   msg.setInformativeText('Authenticated')
-              #   msg.setWindowTitle("")
-              #   msg.exec_()
-              # elif(result["status"] == "nocard"):
-              #   msg = QtWidgets.QMessageBox()
-              #   msg.setIcon(QtWidgets.QMessageBox.Critical)
-              #   msg.setText("finger found but , account not in database")
-              #   msg.setInformativeText('Try again')
-              #   msg.setWindowTitle("")
-              #   msg.exec_()
-          # print ("success = "+result["status"])
 
           except Exception as err :
             print("error = "+str(err))
